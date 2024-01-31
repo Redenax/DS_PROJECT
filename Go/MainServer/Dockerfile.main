@@ -1,0 +1,16 @@
+# Usa l'immagine ufficiale di Golang come base
+FROM golang:latest
+
+# Imposta il working directory all'interno del container
+WORKDIR /app
+# Copia il codice dalla tua macchina locale al filesystem del container
+COPY MainServer .
+
+# Esegui il build dell'applicazione Go
+RUN go build -o main .
+
+# Esponi la porta su cui l'applicazione ascolterà
+EXPOSE 25536
+
+# Comando di avvio dell'applicazione al momento dell'esecuzione del container
+CMD ["./main"]

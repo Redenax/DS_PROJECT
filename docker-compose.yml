@@ -1,0 +1,131 @@
+version: '3'
+services:
+
+  mysqlaut:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: tuapassword
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - "3307:3307"
+    networks:
+      - authnetwork
+
+  mysqlmain:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: tuapassword
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+      
+  mysqlmetrics:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: tuapassword
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    networks:
+      - mynetwork    
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+    networks:
+      - mynetwork
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    expose:
+      - "9093"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "tratte-auto:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - mynetwork
+
+  authserver:
+    ports:
+      - "8081:8081"
+    expose:
+      - "8081"
+    build:
+      context: ./Go/
+      dockerfile: Server_Auth/dockerfile.auth
+    image: alesantonocito/dsbd_project-authserver:latest
+    networks:
+      - authnetwork
+
+  mainserver:
+    ports:
+      - "25536:25536"
+    build:
+      context: ./Go/
+      dockerfile: MainServer/Dockerfile.main
+    image: alesantonocito/dsbd_project-mainserver:latest
+    networks:
+      - mynetwork
+      - authnetwork
+
+  command-telegram-manager:
+    build:
+      context: Python/
+      dockerfile: dockerfile.bottg
+    image: alesantonocito/dsbd_project-command-telegram-manager:latest
+    networks:
+      - mynetwork
+
+  notification-manager:
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
+    build:
+      context: Python/
+      dockerfile: dockerfile.server
+    image: alesantonocito/dsbd_project-notification-manager:latest
+    networks:
+      - mynetwork
+
+  sla-manager:
+    ports:
+      - "8898:8898"
+    expose:
+      - "8898"
+    build:
+      context: Python/
+      dockerfile: dockerfile.SLA
+    image: alesantonocito/dsbd_project-sla-manager:latest
+    networks:
+      - mynetwork
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus_config.yml:/etc/prometheus/prometheus_config.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus_config.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+  authnetwork:
+    driver: bridge  

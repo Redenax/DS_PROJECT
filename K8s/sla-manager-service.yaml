@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sla-manager
+  name: sla-manager
+spec:
+  type: NodePort
+  ports:
+  - name: "8898"
+    port: 8898
+    targetPort: 8898
+    nodePort: 30002
+  selector:
+    io.kompose.service: sla-manager
+status:
+  loadBalancer: {}

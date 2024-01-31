@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- authnetwork-networkpolicy.yaml
+- authserver-deployment.yaml
+- authserver-service.yaml
+- command-telegram-manager-deployment.yaml
+- kafka-claim0-persistentvolumeclaim.yaml
+- kafka-deployment.yaml
+- kafka-service.yaml
+- mainserver-deployment.yaml
+- mainserver-service.yaml
+- mynetwork-networkpolicy.yaml
+- mysqlaut-deployment.yaml
+- mysqlaut-service.yaml
+- mysqlmain-deployment.yaml
+- mysqlmain-service.yaml
+- mysqlmetrics-deployment.yaml
+- mysqlmetrics-service.yaml
+- notification-manager-deployment.yaml
+- notification-manager-service.yaml
+- prometheus-deployment.yaml
+- prometheus-service.yaml
+- sla-manager-deployment.yaml
+- sla-manager-service.yaml
+- zookeeper-deployment.yaml
+- zookeeper-service.yaml
+
+
+#kubectl apply -k .
+#kubectl delete -k .

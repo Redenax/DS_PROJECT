@@ -1,0 +1,19 @@
+# Usa un'immagine Python come base
+FROM python:3.11.1
+
+# Imposta il working directory all'interno del container
+WORKDIR /Python/server
+
+COPY ./server/requirements.txt .
+
+# Installa le dipendenze necessarie
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia il tuo codice nella directory di lavoro
+COPY  ./server .
+
+
+EXPOSE 8888
+
+# Comando di avvio dell'applicazione al momento dell'esecuzione del container
+CMD ["python", "Server_flask.py"]

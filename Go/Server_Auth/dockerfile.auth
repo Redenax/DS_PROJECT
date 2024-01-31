@@ -1,0 +1,18 @@
+# Use an official Go runtime as a parent image
+FROM golang:alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+# Copy the local package files to the container's workspace
+COPY Server_Auth .
+
+# Install ping utility (optional)
+RUN apk --no-cache add iputils
+# Esegui il build dell'applicazione Go
+RUN go build -o main .
+
+# Esponi la porta su cui l'applicazione ascolterà
+EXPOSE 8081
+
+# Comando di avvio dell'applicazione al momento dell'esecuzione del container
+CMD ["./main"]

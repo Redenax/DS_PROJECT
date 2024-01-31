@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: notification-manager
+  name: notification-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: notification-manager
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mynetwork: "true"
+        io.kompose.service: notification-manager
+    spec:
+      containers:
+      - image: docker.io/alesantonocito/dsbd_project-notification-manager
+        imagePullPolicy: ""
+        name: notification-manager
+        ports:
+        - containerPort: 8888
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

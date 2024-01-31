@@ -1,0 +1,16 @@
+FROM python:3.11.1
+
+# Imposta il working directory all'interno del container
+WORKDIR /Python/bot_tg
+
+COPY ./bot_tg/requirements.txt .
+
+# Installa le dipendenze necessarie
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia il tuo codice nella directory di lavoro
+COPY  ./bot_tg .
+
+
+# Comando di avvio dell'applicazione al momento dell'esecuzione del container
+CMD ["python", "bot_main.py"]

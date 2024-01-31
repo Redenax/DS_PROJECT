@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqlaut
+  name: mysqlaut
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysqlaut
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/authnetwork: "true"
+        io.kompose.service: mysqlaut
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: tuapassword
+        - name: MYSQL_TCP_PORT
+          value: "3307"
+        image: mysql
+        imagePullPolicy: ""
+        name: mysqlaut
+        ports:
+        - containerPort: 3307
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

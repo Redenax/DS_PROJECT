@@ -1,0 +1,14 @@
+Installare libreria per il bot di telegram
+
+git clone https://github.com/python-telegram-bot/python-telegram-bot
+cd python-telegram-bot
+python setup.py install
+
+Per la comunicazione con server Main
+pip install Flask
+
+Utilizzare kafka
+pip install confluent_kafka
+
+Utilizzare prometheus
+pip install prometheus_client
